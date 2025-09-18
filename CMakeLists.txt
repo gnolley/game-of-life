@@ -55,6 +55,16 @@ add_subdirectory(simulation)
 add_subdirectory(renderer)
 add_subdirectory(game)
 
+install(TARGETS
+        ${GAME_EXECUTABLE}
+        ${SIM_TARGET}
+        #${RENDERER_TARGET}
+    RUNTIME
+        DESTINATION 
+    LIBRARY
+        DESTINATION lib
+)
+
 if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
     list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
