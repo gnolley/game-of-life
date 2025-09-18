@@ -55,3 +55,13 @@ add_subdirectory(simulation)
 add_subdirectory(renderer)
 add_subdirectory(game)
 
+if(BUILD_UNIT_TESTS)
+    find_package(Catch2 3 REQUIRED)
+    list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+
+    include(CTest)
+    include(Catch)
+
+    enable_testing()
+    add_subdirectory(tests)
+endif()
