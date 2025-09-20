@@ -10,7 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 set(CMAKE_CXX_EXTENSIONS            OFF)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-set(SHARED_INCLUDES ${CMAKE_SOURCE_DIR}/shared)
+set(SHARED_TARGET GoL-Shared)
+set(SHARED_DIR ${CMAKE_SOURCE_DIR}/shared)
 
 set(GAME_EXECUTABLE GameOfLife)
 set(GAME_DIR ${CMAKE_SOURCE_DIR}/game)
@@ -21,12 +22,13 @@ set(SIM_DIR ${CMAKE_SOURCE_DIR}/simulation)
 set(RENDERER_TARGET GoL-Renderer)
 set(RENDERER_DIR ${CMAKE_SOURCE_DIR}/renderer)
 
-option(BUILD_UNIT_TESTS "Build unit tests with build" OFF)
+set(TEST_GAME_LIBRARY Game-Library)
+
+option(BUILD_UNIT_TESTS "Build unit tests with build" ON)
 option(ENABLE_WARNINGS "Build unit tests with build" ON)
 option(ENABLE_WARNINGS_AS_ERRORS "Build unit tests with build" ON)
 
 option(ENABLE_LTO "Enable Link Time Optimisation" OFF)
-
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
 
@@ -51,16 +53,18 @@ if(${ENABLE_SANITIZE_ADDR} OR ${ENABLE_SANITIZE_UNDEF})
     add_santiser_flags()
 endif()
 
+add_subdirectory(shared)
 add_subdirectory(simulation)
 add_subdirectory(renderer)
 add_subdirectory(game)
 
 install(TARGETS
         ${GAME_EXECUTABLE}
+        ${SHARED_TARGET}
         ${SIM_TARGET}
         #${RENDERER_TARGET}
     RUNTIME
-        DESTINATION 
+        DESTINATION /
     LIBRARY
         DESTINATION lib
 )
