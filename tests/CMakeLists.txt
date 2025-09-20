@@ -1,5 +1,6 @@
 set(TEST_SRC 
 	"FileReaderTests.cpp"
+	"GameFrameTests.cpp"
 	"TestUtils.h")
 
 set(TEST_TARGET GoL-Tests)
