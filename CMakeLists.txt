@@ -46,8 +46,6 @@ include ($ENV{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake)
 include(ConfigSafeGuard)
 include(Utils)
 
-#find_package(glfw3 CONFIG REQUIRED)
-
 if(${ENABLE_SANITIZE_ADDR} OR ${ENABLE_SANITIZE_UNDEF})
     include(Sanitisers)
     add_santiser_flags()
@@ -64,7 +62,7 @@ install(TARGETS
         ${GAME_EXECUTABLE}
         ${SHARED_TARGET}
         ${SIM_TARGET}
-        #${RENDERER_TARGET}
+        ${RENDERER_TARGET}
     RUNTIME
         DESTINATION /
     LIBRARY

@@ -3,8 +3,7 @@
 
 namespace GoL
 {
-#pragma warning(push)
-#pragma warning(disable : 4100) // Disable C4100
+
 	constexpr std::streamsize HEADER_LENGTH = 11;
 	constexpr std::uint32_t MAX_LINES_READ = 100000; // Avoid infinite loop from corrupted files.
 
@@ -39,6 +38,8 @@ namespace GoL
 		}
 	}
 
+#pragma warning(push)
+#pragma warning(disable : 4100) // Disable C4100
 
 	void FileReader::SaveFile(const GameFrame& game_frame, const std::filesystem::path& path)
 	{

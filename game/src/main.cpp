@@ -3,14 +3,16 @@
 #include <CLI/CLI.hpp>
 
 #include "Simulation.h"
+#include "../../renderer/includes/Renderer.h"
 
-void simulation_loop(GoL::Simulation& simulation, int max_ticks)
+void simulation_loop(GoL::Simulation& simulation, GoL::Renderer renderer, int max_ticks)
 {
 	int ticks = 0;
 	while (ticks < max_ticks && simulation.get_current_frame().cell_count() > 0)
 	{
 		++ticks;
 		simulation.tick();
+		renderer.render();
 	}
 
 	std::cout << std::format("Finished simulating after {} ticks\n", ticks);
@@ -49,5 +51,9 @@ int main(int argc, char** argv)
 	std::cout << std::format("Loaded snapshot with {} cells.\n", frame.cell_count());
 
 	GoL::Simulation simulation(std::move(frame));
+
+	GoL::Renderer renderer{};
+	renderer.init_renderer();
+
 	simulation_loop(simulation, num_ticks);
 }

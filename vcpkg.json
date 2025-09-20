@@ -12,6 +12,10 @@
     {
       "name": "catch2",
       "version>=": "3.10.0"
-    }
+    },
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "opengl-registry",
+    "egl-registry"
   ]
 }
