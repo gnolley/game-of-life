@@ -7,7 +7,9 @@ namespace GoL
 	class FileReader
 	{
 	public:
-		static GameFrame LoadFile(const std::filesystem::path& path);
+		static void LoadFile(GameFrame& frame, const std::filesystem::path& path);
+		static void LoadFile(GameFrame& frame, std::istream& input);
+
 		static void SaveFile(const GameFrame& game_frame, const std::filesystem::path& path);
 	};
 }

@@ -58,6 +58,8 @@ add_subdirectory(simulation)
 add_subdirectory(renderer)
 add_subdirectory(game)
 
+file(COPY ${CMAKE_SOURCE_DIR}/life_files DESTINATION ${CMAKE_BINARY_DIR}/game/src) #puts life files next to main.cpp for easy testing
+
 install(TARGETS
         ${GAME_EXECUTABLE}
         ${SHARED_TARGET}
@@ -68,6 +70,9 @@ install(TARGETS
     LIBRARY
         DESTINATION lib
 )
+
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/life_files
+        DESTINATION .)
 
 if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
