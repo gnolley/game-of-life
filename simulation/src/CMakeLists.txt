@@ -1,10 +1,5 @@
 set(SIM_SRC
-	"gol_simulation.cpp"
-)
-
-set(SIM_INCLUES
-	"${SIM_DIR}/includes"
-	${SHARED_INCLUDES}
+	"Simulation.cpp"
 )
 
 add_library(${SIM_TARGET} STATIC ${SIM_SRC})
