@@ -1,4 +1,5 @@
 set(GAME_SRC "main.cpp"
+	"FileReader.cpp"
 )
 
 add_executable(${GAME_EXECUTABLE} ${GAME_SRC})

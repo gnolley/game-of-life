@@ -1,4 +1,5 @@
 set(TEST_SRC 
+	"FileReaderTests.cpp"
 	"test.cpp"
 )
 
