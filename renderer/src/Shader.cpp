@@ -59,6 +59,11 @@ namespace GoL
         glUseProgram(id);
     }
 
+    void Shader::set_float(const std::string& name, float f) const
+    {
+        glUniform1f(glGetUniformLocation(id, name.c_str()), f);
+    }
+
     void Shader::check_compile_errors(unsigned int shader) const
     {
         GLint success;

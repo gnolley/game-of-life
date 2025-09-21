@@ -93,12 +93,13 @@ namespace GoL
         frame_buffer.bind(1);
 
         texture_generation_shader.bind();
-        texture_generation_shader.set_float("t", static_cast<float>(delta_time));
+        texture.bind();
 
         glDispatchCompute(frame_buffer.num_cells_packed(), 1, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
         quad_blit_shader.bind();
+        quad_blit_shader.set_float("t", static_cast<float>(delta_time));
         quad.bind();
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

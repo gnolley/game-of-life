@@ -11,15 +11,21 @@ void simulation_loop(GoL::Simulation& simulation, GoL::Renderer renderer, int ma
 {
 	// render the initial frame before simulation
 	renderer.render(simulation.get_current_frame());
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
 	int ticks = 0;
+	auto next_sim_tick = std::chrono::system_clock::now() + std::chrono::milliseconds(500);
 	while (ticks < max_ticks && simulation.get_current_frame().cell_count() > 0 || renderer.window_open())
 	{
+		if (std::chrono::system_clock::now() < next_sim_tick)
+		{
+			renderer.render(simulation.get_current_frame());
+			continue;
+		}
+
 		++ticks;
 		simulation.tick();
 		renderer.render(simulation.get_current_frame());
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		next_sim_tick = std::chrono::system_clock::now() + std::chrono::milliseconds(150);
 	}
 
 	std::cout << std::format("Finished simulating after {} ticks\n", ticks);
@@ -48,7 +54,7 @@ int main(int argc, char** argv)
 	std::filesystem::path relative{ life_file };
 	std::filesystem::path life_file_path = std::filesystem::current_path() / relative;
 
-	if (std::filesystem::is_regular_file(life_file_path) == false)
+	if (is_regular_file(life_file_path) == false)
 	{
 		std::cerr << std::format("Invalid path: {}", life_file_path.string());
 		return 2;
