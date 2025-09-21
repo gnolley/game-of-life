@@ -22,7 +22,6 @@ namespace GoL
 {
     const int SCR_WIDTH = 800;
     const int SCR_HEIGHT = 600;
-    const int TEXTURE_WIDTH = 64, TEXTURE_HEIGHT = 64;
 
 	#pragma warning(push)
 	#pragma warning(disable : 4100) // Disable C4100
@@ -37,14 +36,14 @@ namespace GoL
         glfwTerminate();
     }
 
-	void Renderer::init_renderer()
+	void Renderer::init_renderer(unsigned int width, unsigned int height)
 	{
 		init_window();
 
         texture_generation_shader = ComputeShader({ "shaders/generate_life_texture.comp" });
         quad_blit_shader = Shader({ "shaders/quad.vert" }, { "shaders/quad.frag" });
-        texture = Texture(TEXTURE_WIDTH, TEXTURE_HEIGHT);
-        frame_buffer = GameFrameBuffer(TEXTURE_WIDTH, TEXTURE_HEIGHT, -TEXTURE_WIDTH / 2, -TEXTURE_HEIGHT / 2);
+        texture = Texture(width, height);
+        frame_buffer = GameFrameBuffer(width, height, -static_cast<int>(width) / 2, -static_cast<int>(height) / 2);
 
         std::vector quad_verts = {
             // positions        // texture Coords

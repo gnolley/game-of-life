@@ -15,7 +15,7 @@ namespace GoL
 		Renderer() = default;
 		~Renderer();
 
-		void init_renderer();
+		void init_renderer(unsigned int width = 64, unsigned int height = 64);
 		void init_window();
 
 		void render(const GameFrame& frame);

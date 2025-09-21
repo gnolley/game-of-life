@@ -43,6 +43,14 @@ namespace GoL
 
 	void FileReader::SaveFile(const GameFrame& game_frame, const std::filesystem::path& path)
 	{
+		std::ofstream output_stream(path, std::ios::out);
+
+		output_stream << "#Life 1.06";
+
+		for (const Cell& cell : game_frame)
+		{
+			output_stream << "\n" << cell.x << " " << cell.y;
+		}
 	}
 
 #pragma warning(pop) // Restore previous warning state
