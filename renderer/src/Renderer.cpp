@@ -9,6 +9,9 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
+#include "ComputeShader.h"
+#include "Shader.h"
+
 // =================================================
 //
 // Note: This is a light-weight renderer, made quickly. It won't look pretty.
@@ -17,8 +20,17 @@
 
 namespace GoL
 {
-    const unsigned int SCR_WIDTH = 800;
-    const unsigned int SCR_HEIGHT = 600;
+    const int SCR_WIDTH = 800;
+    const int SCR_HEIGHT = 600;
+    const int TEXTURE_WIDTH = 64, TEXTURE_HEIGHT = 64;
+
+	#pragma warning(push)
+	#pragma warning(disable : 4100) // Disable C4100
+	    void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+	    {
+	        glViewport(0, 0, width, height);
+	    }
+	#pragma warning(pop) // Restore previous warning state
 
     Renderer::~Renderer()
     {
@@ -28,16 +40,22 @@ namespace GoL
 	void Renderer::init_renderer()
 	{
 		init_window();
+
+        texture_generation_shader = ComputeShader({ "shaders/generate_life_texture.comp" });
+        quad_blit_shader = Shader({ "shaders/quad.vert" }, { "shaders/quad.frag" });
+        texture = Texture(TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        frame_buffer = GameFrameBuffer(TEXTURE_WIDTH, TEXTURE_HEIGHT, -TEXTURE_WIDTH / 2, -TEXTURE_HEIGHT / 2);
+
+        std::vector quad_verts = {
+            // positions        // texture Coords
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+
+        quad = Quad(quad_verts);
 	}
-
-#pragma warning(push)
-#pragma warning(disable : 4100) // Disable C4100
-    void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-    {
-        glViewport(0, 0, width, height);
-    }
-#pragma warning(pop) // Restore previous warning state
-
 
 	void Renderer::init_window()
 	{
@@ -60,12 +78,38 @@ namespace GoL
         glfwSwapInterval(1);
 	}
 
-	void Renderer::render()
+	void Renderer::render(const GameFrame& frame)
 	{
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        double time = glfwGetTime();
+        double delta_time = time - time_last_frame;
+
+        glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        texture.bind();
+        texture.clear();
+        
+        frame_buffer.update_buffer(frame);
+        frame_buffer.bind(1);
+
+        texture_generation_shader.bind();
+        texture_generation_shader.set_float("t", static_cast<float>(delta_time));
+
+        glDispatchCompute(frame_buffer.num_cells_packed(), 1, 1);
+        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+        quad_blit_shader.bind();
+        quad.bind();
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+	}
+
+	bool Renderer::window_open()
+	{
+        return !glfwWindowShouldClose(window);
 	}
 }

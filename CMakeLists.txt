@@ -57,6 +57,7 @@ add_subdirectory(renderer)
 add_subdirectory(game)
 
 file(COPY ${CMAKE_SOURCE_DIR}/life_files DESTINATION ${CMAKE_BINARY_DIR}/game/src) #puts life files next to main.cpp for easy testing
+file(COPY ${RENDERER_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/game/src) #puts shaders next to main so we can load them from file
 
 install(TARGETS
         ${GAME_EXECUTABLE}
@@ -72,6 +73,9 @@ install(TARGETS
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/life_files
         DESTINATION .)
 
+install (DIRECTORY ${RENDERER_DIR}/shaders
+        DESTINATION .)
+        
 if(BUILD_UNIT_TESTS)
     find_package(Catch2 3 REQUIRED)
     list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)

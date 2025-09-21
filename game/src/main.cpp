@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+
 #include "FileReader.h"
 #include <CLI/CLI.hpp>
 
@@ -7,12 +9,17 @@
 
 void simulation_loop(GoL::Simulation& simulation, GoL::Renderer renderer, int max_ticks)
 {
+	// render the initial frame before simulation
+	renderer.render(simulation.get_current_frame());
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+
 	int ticks = 0;
-	while (ticks < max_ticks && simulation.get_current_frame().cell_count() > 0)
+	while (ticks < max_ticks && simulation.get_current_frame().cell_count() > 0 || renderer.window_open())
 	{
 		++ticks;
 		simulation.tick();
-		renderer.render();
+		renderer.render(simulation.get_current_frame());
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 	std::cout << std::format("Finished simulating after {} ticks\n", ticks);
@@ -37,7 +44,7 @@ int main(int argc, char** argv)
 		std::cin >> life_file;
 	}
 
-	GoL::GameFrame frame{};
+	GoL::GameFrame initial_frame{};
 	std::filesystem::path relative{ life_file };
 	std::filesystem::path life_file_path = std::filesystem::current_path() / relative;
 
@@ -47,13 +54,12 @@ int main(int argc, char** argv)
 		return 2;
 	}
 
-	GoL::FileReader::LoadFile(frame, life_file_path);
-	std::cout << std::format("Loaded snapshot with {} cells.\n", frame.cell_count());
-
-	GoL::Simulation simulation(std::move(frame));
+	GoL::FileReader::LoadFile(initial_frame, life_file_path);
+	std::cout << std::format("Loaded snapshot with {} cells.\n", initial_frame.cell_count());
 
 	GoL::Renderer renderer{};
 	renderer.init_renderer();
 
-	simulation_loop(simulation, num_ticks);
+	GoL::Simulation simulation(std::move(initial_frame));
+	simulation_loop(simulation, renderer, num_ticks);
 }

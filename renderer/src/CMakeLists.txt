@@ -1,5 +1,10 @@
 set(RENDERER_SRC
 	"Renderer.cpp"
+	"ComputeShader.cpp" 
+	"Shader.cpp"
+	"Texture.cpp"
+	"Quad.cpp"
+	"GameFrameBuffer.cpp"
 )
 
 find_package(glfw3 CONFIG REQUIRED)

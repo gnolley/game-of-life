@@ -1,0 +1,28 @@
+#version 450 core
+#extension GL_ARB_gpu_shader_int64 : enable
+
+layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;
+
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+
+struct cell
+{
+    int x;
+    int y;
+};
+layout(std430, binding = 1) buffer cellBuffer
+{
+    cell cells[];
+};
+
+layout(location = 0) uniform float t;                 /** Time */
+
+
+void main()
+{
+    if (gl_GlobalInvocationID.x >= cells.length()) return;
+
+    cell c = cells[gl_GlobalInvocationID.x];
+    ivec2 texCoord = ivec2(c.x, c.y);
+    imageStore(imgOutput, texCoord, vec4(1,1,1,1));
+}
