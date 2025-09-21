@@ -56,6 +56,10 @@ namespace GoL
 			{
 				next_frame->set_cell(cell.x, cell.y);
 			}
+			if (adjacent_cells == 2 && prev_frame->get_cell(cell.x, cell.y))
+			{
+				next_frame->set_cell(cell.x, cell.y);
+			}
 
 			for (const Cell& offset : ADJACENT_CELL_MATRIX)
 			{
